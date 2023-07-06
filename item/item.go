@@ -36,17 +36,19 @@ func GetItemByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	itemParam := chi.URLParam(r, "id")
 
-	item := func() Item {
-		var i Item
-		for _, item := range items {
-			if item.ID == itemParam {
-				return item
-			}
-		}
-		return i
-	}
+	item := FindItem(itemParam)
 
-	json.NewEncoder(w).Encode(item())
+	json.NewEncoder(w).Encode(item)
+}
+
+func FindItem(itemParam string) Item {
+	var i Item
+	for _, item := range items {
+		if item.ID == itemParam {
+			return item
+		}
+	}
+	return i
 }
 
 func AddItem(w http.ResponseWriter, r *http.Request) {

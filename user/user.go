@@ -36,17 +36,19 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	userParam := chi.URLParam(r, "id")
 
-	user := func() User {
-		var u User
-		for _, user := range users {
-			if user.ID == userParam {
-				return user
-			}
-		}
-		return u
-	}
+	user := FindUser(userParam)
 
-	json.NewEncoder(w).Encode(user())
+	json.NewEncoder(w).Encode(user)
+}
+
+func FindUser(userParam string) User {
+	var i User
+	for _, user := range users {
+		if user.ID == userParam {
+			return user
+		}
+	}
+	return i
 }
 
 func AddUser(w http.ResponseWriter, r *http.Request) {

@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
+	"github.com/danieldevill/go-bidding-system/bid"
 	"github.com/danieldevill/go-bidding-system/item"
 	"github.com/danieldevill/go-bidding-system/user"
 )
@@ -19,6 +20,7 @@ func main() {
 
 	user.AddMockUsers()
 	item.AddMockItems()
+	bid.AddMockBids()
 
 	// Add User HTTP handlers
 	router.Get("/users", user.GetUsers)
@@ -31,6 +33,16 @@ func main() {
 	router.Get("/items/id/{id}", item.GetItemByID)
 	router.Post("/items/id/{id}/name/{name}", item.AddItem)
 	router.Delete("/items/id/{id}", item.DeleteItemByID)
+
+	// Add Bid HTTP handlers
+	router.Get("/bids", bid.GetBids)
+	router.Get("/bids/{userid}/{itemid}", bid.GetBid)
+	router.Post("/bids/{userid}/{itemid}/{amount}", bid.AddBid)
+	router.Put("/bids/{userid}/{itemid}/{amount}", bid.UpdateBid)
+	router.Delete("/bids/{userid}/{itemid}", bid.DeleteBid)
+	router.Get("/winner/{itemid}", bid.WinnerBidByItemID)
+	router.Get("/bids/{itemid}", bid.BidsByItemID)
+	router.Get("/items/user/{userid}", bid.ItemByUserID)
 
 	// Start an HTTP server with a given address and handler
 	http.ListenAndServe(":3000", router)
